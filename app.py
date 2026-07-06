@@ -5,31 +5,31 @@ from agents import run_techgap_pipeline
 st.set_page_config(page_title="TechGap AI", layout="wide")
 
 st.title("TechGap AI — Skill Gap Analyzer")
-st.markdown("Analisis lowongan kerja, bandingkan dengan bukti di GitHub Anda, dan temukan *skill gap* berbasis data.")
+st.markdown("Analyze job postings, cross-reference with your verifiable GitHub evidence, and discover your data-driven skill gaps.")
 
 col1, col2 = st.columns([1, 1])
 
 with col1:
-    st.subheader("1. Masukkan Detail Anda")
+    st.subheader("1. Enter Your Details")
     github_user = st.text_input("GitHub Username", placeholder="e.g., octocat")
-    gemini_key = st.text_input("Gemini API Key (opsional jika sudah ada di .env)", type="password")
+    gemini_key = st.text_input("Gemini API Key (optional if set in .env)", type="password")
     
-    st.subheader("2. Masukkan Deskripsi Lowongan (Job Description)")
-    jd_text = st.text_area("Paste teks lowongan pekerjaan di sini", height=200, placeholder="Requirements: Python, Docker, AWS, React...")
+    st.subheader("2. Enter Job Description")
+    jd_text = st.text_area("Paste the job description text here", height=200, placeholder="Requirements: Python, Docker, AWS, React...")
     
-    analyze_btn = st.button("Analisis Skill Gap", type="primary")
+    analyze_btn = st.button("Analyze Skill Gap", type="primary")
 
 if analyze_btn:
     if not github_user or not jd_text:
-        st.error("Mohon isi GitHub Username dan Job Description.")
+        st.error("Please fill in both the GitHub Username and Job Description.")
     else:
-        with st.spinner("Agen sedang bekerja: Parsing JD, Audit GitHub, dan Menganalisis Gap..."):
+        with st.spinner("Agents are working: Parsing JD, Auditing GitHub, and Analyzing Gaps..."):
             result = run_techgap_pipeline(jd_text, github_user, gemini_key)
             
             if "error" in result:
                 st.error(result["error"])
             else:
-                st.success("Analisis selesai!")
+                st.success("Analysis complete!")
                 
                 job_analysis = result.get("job_analysis", {})
                 github_audit = result.get("github_audit", {})
@@ -64,21 +64,21 @@ if analyze_btn:
                     user_values.append(user_values[0])
 
                 with col2:
-                    st.subheader("Visualisasi Skill Gap (Radar)")
+                    st.subheader("Skill Gap Visualization (Radar Chart)")
                     if len(all_skills) > 1:
                         fig = go.Figure()
                         fig.add_trace(go.Scatterpolar(
                             r=market_values,
                             theta=all_skills,
                             fill='toself',
-                            name='Kebutuhan Pasar (Must-Have)',
+                            name='Market Requirements (Must-Have)',
                             line_color='red'
                         ))
                         fig.add_trace(go.Scatterpolar(
                             r=user_values,
                             theta=all_skills,
                             fill='toself',
-                            name='Skill Anda (Verified)',
+                            name='Your Skills (Verified)',
                             line_color='blue'
                         ))
                         fig.update_layout(
@@ -89,10 +89,10 @@ if analyze_btn:
                         )
                         st.plotly_chart(fig, use_container_width=True)
                     else:
-                        st.info("Data skill tidak cukup untuk menampilkan grafik radar.")
+                        st.info("Not enough skill data to display the radar chart.")
 
-                st.subheader("Rekomendasi Portofolio & Analisis Detail")
+                st.subheader("Portfolio Recommendations & Detailed Analysis")
                 st.markdown(gap_report)
                 
-                with st.expander("Lihat Bukti Audit GitHub Mentah"):
+                with st.expander("View Raw GitHub Audit Evidence"):
                     st.json(github_audit)
