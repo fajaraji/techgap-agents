@@ -1,0 +1,103 @@
+# TechGap AI Skill Taxonomy
+
+categories:
+  - name: "Programming Languages"
+    skills:
+      - Python
+      - JavaScript
+      - TypeScript
+      - Java
+      - C++
+      - C#
+      - Go
+      - Rust
+      - Ruby
+      - PHP
+      - Swift
+      - Kotlin
+
+  - name: "Frontend Development"
+    skills:
+      - HTML/CSS
+      - React
+      - Next.js
+      - Vue.js
+      - Angular
+      - Tailwind CSS
+      - Svelte
+      - State Management (Redux, Zustand)
+
+  - name: "Backend Development"
+    skills:
+      - Node.js
+      - Express
+      - Django
+      - Flask
+      - FastAPI
+      - Spring Boot
+      - ASP.NET
+      - GraphQL
+      - REST APIs
+      - gRPC
+
+  - name: "Databases & Storage"
+    skills:
+      - PostgreSQL
+      - MySQL
+      - MongoDB
+      - Redis
+      - Elasticsearch
+      - Cassandra
+      - DynamoDB
+      - Snowflake
+      - BigQuery
+
+  - name: "Cloud & Infrastructure"
+    skills:
+      - AWS (Amazon Web Services)
+      - Google Cloud Platform (GCP)
+      - Microsoft Azure
+      - Docker
+      - Kubernetes (K8s)
+      - Terraform
+      - Ansible
+      - CI/CD (GitHub Actions, GitLab CI, Jenkins)
+      - Linux/Unix Administration
+
+  - name: "Data Engineering & Analytics"
+    skills:
+      - SQL
+      - Apache Spark
+      - Apache Kafka
+      - Airflow
+      - Hadoop
+      - dbt (data build tool)
+      - Pandas
+      - Power BI / Tableau
+
+  - name: "AI & Machine Learning"
+    skills:
+      - PyTorch
+      - TensorFlow
+      - Scikit-Learn
+      - NLP (Natural Language Processing)
+      - Computer Vision
+      - LLM Prompt Engineering
+      - RAG (Retrieval-Augmented Generation)
+      - LangChain / LlamaIndex
+      - Hugging Face
+
+  - name: "Mobile Development"
+    skills:
+      - Flutter
+      - React Native
+      - iOS (Swift/Objective-C)
+      - Android (Kotlin/Java)
+
+  - name: "Security & Testing"
+    skills:
+      - Unit Testing (Jest, PyTest, JUnit)
+      - E2E Testing (Cypress, Playwright)
+      - Penetration Testing
+      - OWASP Top 10
+      - OAuth / JWT Authentication
