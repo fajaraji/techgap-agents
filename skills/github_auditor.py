@@ -4,16 +4,16 @@ from google.genai import types
 import sys
 import os
 
-# Ensure mcp_server can be imported from root
+# Ensure github_api can be imported from root
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import mcp_server
+import github_api
 
 def audit_github_profile(api_key: str, username: str, required_skills: list) -> dict:
     """
     Audits a GitHub profile and returns verified skills.
     """
     try:
-        repos_info = mcp_server.get_user_repos(username)
+        repos_info = github_api.get_user_repos_raw(username)
     except Exception as e:
         return {"error": str(e)}
 
