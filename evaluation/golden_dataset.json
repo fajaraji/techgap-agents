@@ -1,0 +1,10 @@
+{
+  "test_cases": [
+    {
+      "id": "TC_001",
+      "github_username": "octocat",
+      "job_description": "We are looking for a Software Engineer with strong Python and Docker skills.",
+      "expected_missing_skills": ["Docker"]
+    }
+  ]
+}
