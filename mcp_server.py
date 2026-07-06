@@ -5,6 +5,8 @@ from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
+ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
 
 # Initialize FastMCP server
 mcp = FastMCP("TechGap_GitHub_MCP")
@@ -51,6 +53,41 @@ def get_repo_readme(username: str, repo_name: str) -> str:
         return content
     except Exception as e:
         return f"Error decoding README: {e}"
+
+@mcp.tool()
+def search_jobs_adzuna(job_title: str, location: str = "us", limit: int = 3) -> str:
+    """
+    Search for job descriptions using the Adzuna API.
+    Provide job_title (e.g. 'Data Engineer') and location (e.g. 'us', 'gb', 'sg').
+    Returns a compiled string of job descriptions to be analyzed.
+    """
+    if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
+        return "Adzuna API credentials not found. Please add ADZUNA_APP_ID and ADZUNA_APP_KEY to .env"
+        
+    url = f"https://api.adzuna.com/v1/api/jobs/{location}/search/1"
+    params = {
+        "app_id": ADZUNA_APP_ID,
+        "app_key": ADZUNA_APP_KEY,
+        "results_per_page": limit,
+        "what": job_title
+    }
+    
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        return f"Error fetching jobs from Adzuna: {response.text}"
+        
+    results = response.json().get("results", [])
+    if not results:
+        return f"No jobs found for {job_title} in {location}."
+        
+    compiled_jd = []
+    for job in results:
+        title = job.get("title", "")
+        company = job.get("company", {}).get("display_name", "Unknown Company")
+        description = job.get("description", "")
+        compiled_jd.append(f"Title: {title}\nCompany: {company}\nDescription: {description}\n")
+        
+    return "\n---\n".join(compiled_jd)
 
 if __name__ == "__main__":
     # Start the standard input/output server loop
