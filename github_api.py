@@ -46,7 +46,27 @@ def get_repo_readme_raw(username: str, repo_name: str) -> str:
         return ""
 
 def search_jobs_adzuna_raw(job_title: str, location: str = "us", limit: int = 5) -> str:
-    """Search for job descriptions using the Adzuna API."""
+    """Search for job descriptions using the Adzuna API, with a fallback to Remotive API."""
+    supported_countries = ["at", "au", "be", "br", "ca", "ch", "de", "es", "fr", "gb", "in", "it", "mx", "nl", "nz", "pl", "sg", "us", "za"]
+    
+    if location.lower() not in supported_countries:
+        # Fallback to Remotive API for unsupported countries (searches global remote jobs)
+        url = f"https://remotive.com/api/remote-jobs?search={job_title}&limit={limit}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            jobs = response.json().get("jobs", [])[:limit]
+            if not jobs:
+                return f"No jobs found for '{job_title}' via Global Fallback API."
+            compiled_jd = []
+            for job in jobs:
+                title = job.get("title", "")
+                company = job.get("company_name", "Unknown Company")
+                import re
+                description = re.sub('<[^<]+>', '', job.get("description", ""))
+                compiled_jd.append(f"Title: {title}\nCompany: {company}\nDescription: {description[:1500]}...\n")
+            return "\n---\n".join(compiled_jd)
+        return f"ERROR: Location '{location}' not supported by Adzuna, and Fallback API failed."
+
     ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
     ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
     
