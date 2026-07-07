@@ -41,7 +41,10 @@ def parse_job_description(api_key: str, jd_text: str) -> dict:
                 response_mime_type="application/json",
             )
         )
-        return json.loads(response.text)
+        parsed_data = json.loads(response.text)
+        if isinstance(parsed_data, list) and len(parsed_data) > 0:
+            return parsed_data[0]
+        return parsed_data
     except Exception as e:
         print(f"Error in job_parser: {e}")
         return {"error": str(e)}
