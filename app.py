@@ -1,9 +1,21 @@
 import streamlit as st
 import plotly.express as px
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from agents import run_techgap_pipeline
-from github_api import search_jobs_adzuna_raw
+from skills.market_researcher import fetch_live_market_demand
 
+load_dotenv()
+api_key = os.getenv("GEMINI_API_KEY")
+
+# Cache file for Manual JD auto-save
+CACHE_FILE = ".jd_cache.txt"
+if os.path.exists(CACHE_FILE):
+    with open(CACHE_FILE, "r") as f:
+        cached_jd = f.read()
+else:
+    cached_jd = ""
 st.set_page_config(page_title="TechGap AI", layout="wide")
 
 st.title("TechGap AI — Skill Gap Analyzer")
@@ -16,32 +28,39 @@ with col1:
     github_user = st.text_input("GitHub Username", placeholder="e.g., octocat")
     
     st.subheader("2. Job Analysis Source")
-    tab1, tab2 = st.tabs(["Market Search (Adzuna)", "Manual JD Paste"])
+    tab1, tab2 = st.tabs(["Live Indonesian Tech Market", "Manual JD Paste"])
     
     with tab1:
-        st.markdown("Search active job postings to analyze market demand.")
-        job_title = st.text_input("Job Title", placeholder="e.g., Data Engineer")
-        job_location = st.text_input("Location Code (e.g., us, gb, sg, au)", value="sg")
-        adzuna_btn = st.button("Analyze Market Demand", type="primary")
+        st.markdown("Search live Google data to analyze real-time market demand in Indonesia.")
+        job_title = st.text_input("Enter Tech Role (e.g. Data Engineer, AI Engineer)", value="Data Engineer")
+        research_btn = st.button("Analyze Live Market Demand", type="primary")
         
     with tab2:
         st.markdown("Paste a specific job description.")
-        manual_jd = st.text_area("Paste the job description text here", height=200, placeholder="Requirements: Python, Docker, AWS, React...")
+        manual_jd = st.text_area("Paste the job description text here", value=cached_jd, height=200, placeholder="Requirements: Python, Docker, AWS, React...")
         manual_btn = st.button("Analyze Specific JD", type="primary")
+        
+        # Auto-save logic
+        if manual_jd != cached_jd:
+            with open(CACHE_FILE, "w") as f:
+                f.write(manual_jd)
 
 analyze_clicked = False
 jd_text_to_analyze = ""
 
-if adzuna_btn:
+if research_btn:
     if not github_user or not job_title:
-        st.error("Please fill in GitHub Username and Job Title.")
+        st.error("Please fill in GitHub Username and a Job Title.")
     else:
-        with st.spinner(f"Fetching live job postings for '{job_title}' from Adzuna..."):
-            jd_text_to_analyze = search_jobs_adzuna_raw(job_title, job_location, limit=5)
-            if jd_text_to_analyze.startswith("ERROR") or jd_text_to_analyze.startswith("No jobs"):
+        with st.spinner(f"Agent is searching Google for real-time '{job_title}' job vacancies in Indonesia..."):
+            jd_text_to_analyze = fetch_live_market_demand(api_key, job_title)
+            if jd_text_to_analyze.startswith("ERROR"):
                 st.error(jd_text_to_analyze)
             else:
-                st.success("Successfully fetched market data!")
+                st.success("Successfully generated grounded market data!")
+                # Show what the agent found from the live search
+                with st.expander("View Live Market Job Description", expanded=False):
+                    st.markdown(jd_text_to_analyze)
                 analyze_clicked = True
 
 if manual_btn:
