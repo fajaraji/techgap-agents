@@ -1,5 +1,6 @@
 import os
 import requests
+import urllib.parse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -45,55 +46,45 @@ def get_repo_readme_raw(username: str, repo_name: str) -> str:
     except Exception as e:
         return ""
 
-def search_jobs_adzuna_raw(job_title: str, location: str = "us", limit: int = 5) -> str:
-    """Search for job descriptions using the Adzuna API, with a fallback to Remotive API."""
-    supported_countries = ["at", "au", "be", "br", "ca", "ch", "de", "es", "fr", "gb", "in", "it", "mx", "nl", "nz", "pl", "sg", "us", "za"]
-    
-    if location.lower() not in supported_countries:
-        # Fallback to Remotive API for unsupported countries (searches global remote jobs)
-        url = f"https://remotive.com/api/remote-jobs?search={job_title}&limit={limit}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            jobs = response.json().get("jobs", [])[:limit]
-            if not jobs:
-                return f"No jobs found for '{job_title}' via Global Fallback API."
-            compiled_jd = []
-            for job in jobs:
-                title = job.get("title", "")
-                company = job.get("company_name", "Unknown Company")
-                import re
-                description = re.sub('<[^<]+>', '', job.get("description", ""))
-                compiled_jd.append(f"Title: {title}\nCompany: {company}\nDescription: {description[:1500]}...\n")
-            return "\n---\n".join(compiled_jd)
-        return f"ERROR: Location '{location}' not supported by Adzuna, and Fallback API failed."
+def fetch_repo_tree(username: str, repo_name: str, default_branch: str) -> str:
+    """Fetches the entire file tree for a single repository."""
+    url = f"https://api.github.com/repos/{username}/{repo_name}/git/trees/{default_branch}?recursive=1"
+    resp = requests.get(url, headers=get_headers())
+    if resp.status_code == 200:
+        tree = resp.json().get("tree", [])
+        # We only care about files (blobs), ignore directories (trees) to save space
+        paths = [item["path"] for item in tree if item["type"] == "blob"]
+        
+        # Limit to prevent context window bloat for massive repos
+        if len(paths) > 500:
+            paths = paths[:500] + ["...[TRUNCATED]"]
+            
+        if paths:
+            return f"\n--- Repo: {repo_name} ---\n" + "\n".join(paths)
+    return ""
 
-    ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
-    ADZUNA_APP_KEY = os.getenv("ADZUNA_APP_KEY")
+def get_all_repos_trees(username: str) -> str:
+    """Fetch the directory trees for all repositories concurrently."""
+    repos_url = f"https://api.github.com/users/{username}/repos?per_page=100"
+    resp = requests.get(repos_url, headers=get_headers())
+    if resp.status_code != 200:
+        return f"Error fetching repos: {resp.status_code}"
     
-    if not ADZUNA_APP_ID or not ADZUNA_APP_KEY:
-        return "ERROR: Adzuna API credentials not found in .env"
+    repos = resp.json()
+    if not repos:
+        return "No repositories found."
         
-    url = f"https://api.adzuna.com/v1/api/jobs/{location}/search/1"
-    params = {
-        "app_id": ADZUNA_APP_ID,
-        "app_key": ADZUNA_APP_KEY,
-        "results_per_page": limit,
-        "what": job_title
-    }
+    repo_details = [(r.get("name"), r.get("default_branch", "main")) for r in repos if isinstance(r, dict)]
     
-    response = requests.get(url, params=params)
-    if response.status_code != 200:
-        return f"ERROR fetching jobs from Adzuna: {response.text}"
-        
-    results = response.json().get("results", [])
-    if not results:
-        return f"No jobs found for {job_title} in {location}."
-        
-    compiled_jd = []
-    for job in results:
-        title = job.get("title", "")
-        company = job.get("company", {}).get("display_name", "Unknown Company")
-        description = job.get("description", "")
-        compiled_jd.append(f"Title: {title}\nCompany: {company}\nDescription: {description}\n")
-        
-    return "\n---\n".join(compiled_jd)
+    from concurrent.futures import ThreadPoolExecutor
+    trees_info = []
+    
+    # Concurrently fetch the tree for every repository
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(fetch_repo_tree, username, name, branch) for name, branch in repo_details]
+        for future in futures:
+            res = future.result()
+            if res:
+                trees_info.append(res)
+                
+    return "".join(trees_info)

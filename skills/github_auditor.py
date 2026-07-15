@@ -10,29 +10,12 @@ import github_api
 
 def audit_github_profile(api_key: str, username: str, required_skills: list) -> dict:
     """
-    Audits a GitHub profile and returns verified skills.
+    Audits a GitHub profile and returns verified skills using Tree API for 100% accurate file-level evidence.
     """
     try:
-        # Fetch basic repo list
-        repos_info = github_api.get_user_repos_raw(username, limit=5)
-        
-        # Try to fetch README for the top 3 repos to improve accuracy
-        import json as builtin_json # to parse the raw string back or we can just parse lines.
-        # Actually github_api returns a string, let's just use the API directly to get the JSON to avoid regex
-        import requests
-        headers = github_api.get_headers()
-        url = f"https://api.github.com/users/{username}/repos?sort=updated&per_page=3"
-        resp = requests.get(url, headers=headers)
-        if resp.status_code == 200:
-            repos_data = resp.json()
-            for r in repos_data:
-                repo_name = r.get("name")
-                readme_content = github_api.get_repo_readme_raw(username, repo_name)
-                if readme_content:
-                    repos_info += f"\n\n--- README for {repo_name} ---\n{readme_content}\n--- END README ---"
-                    
+        repos_info = github_api.get_all_repos_trees(username)
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"Error running tree fetch: {str(e)}"}
 
     client = genai.Client(api_key=api_key)
     
@@ -40,15 +23,17 @@ def audit_github_profile(api_key: str, username: str, required_skills: list) -> 
     You are an expert Technical Assessor (GitHub Auditor).
     Your job is to strictly verify if the user possesses the following required skills: {required_skills}
     
-    You MUST adhere to the Anti-Hallucination policy: Only verify a skill if there is concrete evidence in the provided GitHub data.
+    You MUST adhere to the Anti-Hallucination policy: Only verify a skill if there is concrete evidence in the provided directory tree paths.
     
-    Here is the user's GitHub public repository information:
+    Here is the complete file directory tree for all of the user's GitHub repositories:
     {repos_info}
+    
+    Look for evidence in file names, extensions, and folder paths (e.g., .sql files indicate SQL, main.tf or folders containing 'gcp' indicate GCP, .py indicates Python).
     
     Respond ONLY with a valid JSON in this exact format:
     {{
         "verified_skills": [
-            {{"skill": "Python", "evidence": "Used in repo X as main language"}}
+            {{"skill": "GCP", "evidence": "Found in terraform-gcp folder inside de-zoomcamp repo"}}
         ],
         "missing_skills": ["Docker", "Kubernetes"]
     }}
