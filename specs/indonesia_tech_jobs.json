@@ -1,0 +1,102 @@
+[
+  {
+    "role": "Data Engineer",
+    "description": "We are looking for a Data Engineer. Requirements: 2+ years experience. Strong in Python, SQL. Experience with Apache Spark, Airflow, and Cloud Platforms (GCP BigQuery or AWS Redshift). Familiar with ETL/ELT pipelines and dbt."
+  },
+  {
+    "role": "Data Analyst",
+    "description": "Data Analyst needed. Requirements: Advanced SQL, Excel, and visualization tools like Tableau or Google Data Studio. Strong business acumen and presentation skills."
+  },
+  {
+    "role": "Data Scientist",
+    "description": "Data Scientist role. Requirements: Python, Pandas, Scikit-learn, TensorFlow/PyTorch. Experience in building predictive models, machine learning algorithms, and A/B testing."
+  },
+  {
+    "role": "Machine Learning Engineer",
+    "description": "ML Engineer. Requirements: Python, TensorFlow/PyTorch, FastAPI/Flask for model deployment. Experience with MLOps (MLflow), Docker, and Kubernetes."
+  },
+  {
+    "role": "Backend Engineer (Python/Go)",
+    "description": "Backend Engineer. Requirements: Strong in Go (Golang) or Python. Experience with REST APIs, gRPC, PostgreSQL/MySQL, Redis. Familiar with Docker, K8s, and microservices architecture."
+  },
+  {
+    "role": "Backend Engineer (Java/Spring)",
+    "description": "Backend Developer (Java). Requirements: Java 11+, Spring Boot, Hibernate. Experience with RDBMS, message brokers (Kafka/RabbitMQ), and enterprise scale applications."
+  },
+  {
+    "role": "Backend Engineer (Node.js)",
+    "description": "Node.js Backend Engineer. Requirements: JavaScript/TypeScript, Node.js, Express/NestJS. MongoDB, PostgreSQL. Understanding of asynchronous programming and event-driven architecture."
+  },
+  {
+    "role": "Frontend Engineer (React/Next.js)",
+    "description": "Frontend Engineer. Requirements: JavaScript/TypeScript, React.js, Next.js. CSS/Tailwind, state management (Redux/Zustand), and REST/GraphQL API integration."
+  },
+  {
+    "role": "Frontend Engineer (Vue.js)",
+    "description": "Vue.js Developer. Requirements: Vue.js 3, Nuxt.js, Vuex/Pinia. Strong HTML/CSS skills, experience with responsive design and modern frontend tooling."
+  },
+  {
+    "role": "Fullstack Engineer",
+    "description": "Fullstack Engineer. Requirements: Node.js or Python backend, React or Vue frontend. Experience with cloud deployments, databases, and building end-to-end features."
+  },
+  {
+    "role": "Mobile Engineer (Android/Kotlin)",
+    "description": "Android Developer. Requirements: Kotlin, Android SDK, MVVM/MVI architecture, Coroutines, Jetpack Compose. Experience publishing apps to Play Store."
+  },
+  {
+    "role": "Mobile Engineer (iOS/Swift)",
+    "description": "iOS Developer. Requirements: Swift, iOS SDK, SwiftUI or UIKit, CoreData. Experience with App Store deployment and CI/CD for mobile."
+  },
+  {
+    "role": "Mobile Engineer (Flutter)",
+    "description": "Flutter Developer. Requirements: Dart, Flutter framework. State management (Provider/Riverpod/Bloc). Experience with both iOS and Android deployment."
+  },
+  {
+    "role": "DevOps Engineer",
+    "description": "DevOps Engineer. Requirements: Linux administration, AWS/GCP, CI/CD (GitHub Actions/GitLab CI), Infrastructure as Code (Terraform), Docker, Kubernetes."
+  },
+  {
+    "role": "Site Reliability Engineer (SRE)",
+    "description": "SRE. Requirements: Strong scripting (Python/Bash), monitoring (Prometheus, Grafana, Datadog), incident response, Kubernetes orchestration, SLI/SLO management."
+  },
+  {
+    "role": "Cloud Architect (AWS/GCP)",
+    "description": "Cloud Architect. Requirements: Deep expertise in AWS or GCP, cloud networking, security, scalable system design, cost optimization."
+  },
+  {
+    "role": "QA Engineer (Manual)",
+    "description": "QA Engineer. Requirements: Manual testing, creating test cases, regression testing, Jira, API testing (Postman)."
+  },
+  {
+    "role": "SDET / Automation QA",
+    "description": "Software Development Engineer in Test. Requirements: Automation testing tools (Selenium, Cypress, Playwright, Appium). Scripting in Python/JS/Java. CI/CD integration."
+  },
+  {
+    "role": "UI/UX Designer",
+    "description": "UI/UX Designer. Requirements: Figma, wireframing, prototyping, user research, understanding of Design Systems and mobile/web UX principles."
+  },
+  {
+    "role": "Product Manager",
+    "description": "Product Manager. Requirements: Agile methodology, Jira, PRD writing, stakeholder management, basic understanding of tech and data."
+  },
+  {
+    "role": "Scrum Master / Agile Coach",
+    "description": "Scrum Master. Requirements: Certified Scrum Master (CSM), experience facilitating Agile ceremonies, removing blockers, and coaching teams."
+  },
+  {
+    "role": "Cybersecurity Analyst",
+    "description": "Cybersecurity Analyst. Requirements: SOC monitoring, threat intelligence, SIEM tools, incident response, network security."
+  },
+  {
+    "role": "Penetration Tester",
+    "description": "Penetration Tester. Requirements: Ethical hacking, OWASP Top 10, Burp Suite, Kali Linux, vulnerability assessment, bug bounty experience."
+  },
+  {
+    "role": "Database Administrator (DBA)",
+    "description": "DBA. Requirements: PostgreSQL/MySQL performance tuning, backups, replication, high availability, database security."
+  },
+  {
+    "role": "Blockchain Engineer",
+    "description": "Blockchain Developer. Requirements: Solidity, Ethereum/Smart Contracts, Web3.js/Ethers.js, understanding of DeFi and consensus algorithms."
+  }
+]
