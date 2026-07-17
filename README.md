@@ -54,7 +54,7 @@ Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harn
 ├── app.py                      # Streamlit UI & Orchestration controller
 ├── agents.py                   # Master multi-agent pipeline orchestrator
 ├── github_api.py               # GitHub REST & Tree API concurrent wrapper (with rate-limit handling)
-├── mcp_server.py               # FastMCP server exposing GitHub + Adzuna tools
+├── mcp_server.py               # FastMCP server exposing GitHub API tools
 ├── security_middleware.py      # PII masking & sanitization utility
 ├── requirements.txt            # Python dependencies
 ├── .env.example                # Environment variable template
