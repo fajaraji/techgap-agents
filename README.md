@@ -4,25 +4,47 @@ TechGap AI is a production-grade, multi-agent AI system designed to help tech pr
 
 ---
 
+## 🔬 Framework & Theoretical Foundation: `Agent = Model + Harness`
+
+This project is built strictly upon the **Agentic Engineering** principles, realizing the industry-standard formula:
+$$\text{Agent} = \text{Model} + \text{Harness}$$
+
+Where the **Model** acts as the reasoning engine (Gemini), and the **Harness** represents the surrounding infrastructure (memory, tools, guardrails, and orchestration) that makes the agent safe, scalable, and predictable in production.
+
+Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harness framework:
+
+### 1. Spec-Driven Development (SDD) & BDD
+* **Spec Gating**: Built with a strict taxonomy file ([specs/skill_taxonomy.yaml](file:///c:/kaggle-vibecoding-aiagents-2026/specs/skill_taxonomy.yaml)) to prevent model hallucination. The parser maps unstructured job descriptions only to predefined, validated tech categories.
+* **Project DNA**: Controlled by global and workspace project rules (`AGENTS.md`) ensuring that the agent remains strict, objective, and evidence-based.
+
+### 2. Procedural Memory via Agent Skills
+* Instead of stuffing all logic into a single context-rot prompt, the system's memory is divided into modular, decoupled **Agent Skills** under the `skills/` directory:
+  * `job_parser.py`: Spec-driven mapping of roles and required skills.
+  * `market_researcher.py`: Search-grounded live market research agent.
+  * `github_auditor.py`: Git Tree structural auditing agent.
+  * `gap_analyzer.py`: Objective match & personalized project recommendation generator.
+
+### 3. Tool Interoperability & MCP
+* The Harness integrates tools using the **Model Context Protocol (MCP)**, connecting the reasoning model securely to the GitHub REST API and Google Search Grounding services.
+
+### 4. Zero-Trust Security & Policy Gating
+* **Context Hygiene**: Employs a security middleware ([security_middleware.py](file:///c:/kaggle-vibecoding-aiagents-2026/security_middleware.py)) that acts as a structural policy gate. It filters and masks PII (Personally Identifiable Information) and sensitive API keys *before* the context is passed to the LLM.
+
+### 5. Evaluation-Driven Development (EDD)
+* Utilizes LLM-as-a-judge trajectory testing (`evaluation/`) to trace and measure the agent's reasoning path, self-repair behavior, and output consistency against test cases.
+
+---
+
 ## 🌟 Key Features
 
 ### 1. Live Indonesian Tech Market Research (Search-Grounded Agent)
 * Bypasses outdated or limited job APIs by utilizing **Gemini with Google Search Grounding**.
 * Dynamically retrieves current, real-time job vacancies and requirements in Indonesia for any tech role typed by the user.
-* Consolidation and synthesis of actual requirements without scraping violations.
 
-### 2. Zero-Trust Security (PII Sanitization)
-* Includes a robust security middleware ([security_middleware.py](file:///c:/kaggle-vibecoding-aiagents-2026/security_middleware.py)) that automatically masks Personally Identifiable Information (PII) like emails, phone numbers, and API tokens from job descriptions before sending them to the LLM.
-
-### 3. Scalable Git Tree API Auditing
+### 2. Scalable Git Tree API Auditing (O(1) Scalability)
 * **Real-time & Reliable**: Bypasses the delayed GitHub Code Search indexing by reading repository file structures directly using the Git Tree API.
 * **Concurrency (Multithreading)**: Uses `ThreadPoolExecutor` to scan the file trees of up to 100+ repositories concurrently in seconds.
 * **Verifiable Evidence**: Demands hard code proof (e.g., finding `.sql` files for SQL, `terraform-gcp` directories for GCP) to prevent bio-based or README-based skill hallucinations.
-
-### 4. Interactive Gap Analysis & Visualization
-* Compares parsed job requirements against verified GitHub evidence.
-* Renders an interactive bar chart of acquired vs. missing skills.
-* Suggests custom, highly specific portfolio projects on missing skills to help users bridge the gap.
 
 ---
 
@@ -65,10 +87,3 @@ Start the Streamlit dashboard:
 ```bash
 streamlit run app.py
 ```
-
----
-
-## 🛡️ DNA Proyek (Core Constraints)
-* **Evidence-Based only**: Skills are marked as `[Acquired]` ONLY if there is folder/file structural evidence in the repository. BIO descriptions are ignored to prevent skill inflation.
-* **O(1) Repository Scalability**: Avoids fetching entire repository contents or sequential file downloads by performing concurrent REST API Tree scans globally.
-* **Context Hygiene**: Absolute masking of API keys and PII to prevent context leaks.
