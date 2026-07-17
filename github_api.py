@@ -1,10 +1,42 @@
 import os
+import time
 import requests
 import urllib.parse
 from dotenv import load_dotenv
 
 load_dotenv()
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+
+MAX_RETRIES = 3
+RETRY_DELAY_BASE = 2  # seconds (exponential backoff: 2, 4, 8)
+
+def _handle_rate_limit(response) -> bool:
+    """Check for rate limit and sleep if needed. Returns True if request should be retried."""
+    if response.status_code == 429:
+        reset_time = int(response.headers.get("X-RateLimit-Reset", 0))
+        wait = max(reset_time - time.time(), 1) if reset_time else 60
+        print(f"[WARN] GitHub API rate limit hit. Waiting {wait:.0f}s before retry...")
+        time.sleep(wait)
+        return True
+    if response.status_code == 403 and "rate limit" in response.text.lower():
+        reset_time = int(response.headers.get("X-RateLimit-Reset", 0))
+        wait = max(reset_time - time.time(), 1) if reset_time else 60
+        print(f"[WARN] GitHub API secondary rate limit. Waiting {wait:.0f}s...")
+        time.sleep(wait)
+        return True
+    return False
+
+def _make_request(url: str, headers: dict = None) -> requests.Response:
+    """Make a GET request with retry logic for rate limits."""
+    if headers is None:
+        headers = get_headers()
+    
+    for attempt in range(MAX_RETRIES + 1):
+        response = requests.get(url, headers=headers)
+        if _handle_rate_limit(response):
+            continue  # Retry after waiting
+        return response
+    return response  # Return last response after all retries exhausted
 
 def get_headers():
     headers = {"Accept": "application/vnd.github.v3+json"}
@@ -15,7 +47,7 @@ def get_headers():
 def get_user_repos_raw(username: str, limit: int = 5) -> str:
     """Fetch the top updated repositories for a given GitHub username."""
     url = f"https://api.github.com/users/{username}/repos?sort=updated&per_page={limit}"
-    response = requests.get(url, headers=get_headers())
+    response = _make_request(url)
     
     if response.status_code != 200:
         return f"Error fetching repos for {username}: {response.text}"
@@ -30,11 +62,10 @@ def get_user_repos_raw(username: str, limit: int = 5) -> str:
 def get_repo_readme_raw(username: str, repo_name: str) -> str:
     """Fetch the contents of the README.md file for a specific repository."""
     url = f"https://api.github.com/repos/{username}/{repo_name}/readme"
-    headers = get_headers()
     
-    response = requests.get(url, headers=headers)
+    response = _make_request(url)
     if response.status_code != 200:
-        return "" # Silently ignore if no readme
+        return ""  # Silently ignore if no readme
     
     import base64
     content_b64 = response.json().get("content", "")
@@ -49,7 +80,7 @@ def get_repo_readme_raw(username: str, repo_name: str) -> str:
 def fetch_repo_tree(username: str, repo_name: str, default_branch: str) -> str:
     """Fetches the entire file tree for a single repository."""
     url = f"https://api.github.com/repos/{username}/{repo_name}/git/trees/{default_branch}?recursive=1"
-    resp = requests.get(url, headers=get_headers())
+    resp = _make_request(url)
     if resp.status_code == 200:
         tree = resp.json().get("tree", [])
         # We only care about files (blobs), ignore directories (trees) to save space
@@ -66,7 +97,7 @@ def fetch_repo_tree(username: str, repo_name: str, default_branch: str) -> str:
 def get_all_repos_trees(username: str) -> str:
     """Fetch the directory trees for all repositories concurrently."""
     repos_url = f"https://api.github.com/users/{username}/repos?per_page=100"
-    resp = requests.get(repos_url, headers=get_headers())
+    resp = _make_request(repos_url)
     if resp.status_code != 200:
         return f"Error fetching repos: {resp.status_code}"
     
