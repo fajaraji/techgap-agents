@@ -5,6 +5,30 @@
       "github_username": "octocat",
       "job_description": "We are looking for a Software Engineer with strong Python and Docker skills.",
       "expected_missing_skills": ["Docker"]
+    },
+    {
+      "id": "TC_002",
+      "github_username": "octocat",
+      "job_description": "Backend Engineer needed. Requirements: Python, Django, PostgreSQL, Redis.",
+      "expected_missing_skills": ["Django", "PostgreSQL", "Redis"]
+    },
+    {
+      "id": "TC_003",
+      "github_username": "octocat",
+      "job_description": "Frontend Developer. Requirements: JavaScript, React, TypeScript, Tailwind CSS.",
+      "expected_missing_skills": ["React", "TypeScript", "Tailwind CSS"]
+    },
+    {
+      "id": "TC_004",
+      "github_username": "octocat",
+      "job_description": "Cloud Engineer. Requirements: AWS, Docker, Kubernetes, Terraform.",
+      "expected_missing_skills": ["AWS", "Docker", "Kubernetes", "Terraform"]
+    },
+    {
+      "id": "TC_005",
+      "github_username": "octocat",
+      "job_description": "Data Scientist needed. Requirements: Python, SQL, Pandas, TensorFlow.",
+      "expected_missing_skills": ["SQL", "Pandas", "TensorFlow"]
     }
   ]
 }
