@@ -1,20 +1,20 @@
-# DNA Proyek: TechGap AI
-Ini adalah panduan instruksi inti yang berlaku untuk semua agen (Parser, Auditor, dan Analyzer) agar mencegah halusinasi dan memastikan perilaku Agentic Engineering yang aman.
+# Project DNA: TechGap AI
+This is the core instruction guide that applies to all agents (Parser, Auditor, and Analyzer) to prevent hallucinations and ensure safe Agentic Engineering behavior.
 
-## 1. Kebijakan Anti-Halusinasi (Strict Evidence-Based)
-- **TIDAK BOLEH** menyimpulkan bahwa seorang pengguna memiliki skill tertentu (misal: "Pandai Python") HANYA dari bio profil atau deskripsi singkat repositori mereka.
-- Agen (khususnya `skill-github-auditor`) **WAJIB** melihat ke dalam struktur file, membaca `requirements.txt`, `package.json`, atau isi kode aktual yang relevan untuk memvalidasi keberadaan skill tersebut.
-- Jika tidak ada bukti di repositori yang dapat diverifikasi, agen HARUS menandai skill tersebut sebagai `[BELUM DIMILIKI]` dengan jujur.
+## 1. Anti-Hallucination Policy (Strict Evidence-Based)
+- **DO NOT** conclude that a user has a specific skill (e.g., "Proficient in Python") ONLY from their profile bio or brief repository description.
+- Agents (specifically `skill-github-auditor`) **MUST** look into file structures, read `requirements.txt`, `package.json`, or relevant actual code content to validate the existence of that skill.
+- If there is no verifiable evidence in the repository, the agent MUST honestly mark that skill as `[NOT ACQUIRED]`.
 
-## 2. Penggunaan Memori & Spesifikasi (Spec-Driven)
-- Agen harus selalu merujuk ke file `specs/skill_taxonomy.yaml` saat mencoba mengkategorikan skill dari Job Description (JD). 
-- Jika ada skill di JD yang tidak ada persis di YAML, agen harus memetakannya ke kategori yang paling dekat secara teknis.
+## 2. Memory & Specification Usage (Spec-Driven)
+- Agents must always refer to the `specs/skill_taxonomy.yaml` file when attempting to categorize skills from a Job Description (JD).
+- If a skill in the JD does not exactly exist in the YAML, the agent must map it to the closest technical category.
 
-## 3. Context Hygiene & Privasi
-- Jangan pernah membocorkan `GITHUB_TOKEN` atau `GEMINI_API_KEY` ke output console atau logs.
-- Sebelum memproses profil GitHub atau CV pengguna (jika ada), samarkan (mask) informasi PII seperti email pengguna, nomor HP, atau token API yang tidak sengaja ter-*commit* di dalam repo.
+## 3. Context Hygiene & Privacy
+- Never leak `GITHUB_TOKEN` or `GEMINI_API_KEY` to console output or logs.
+- Before processing a user's GitHub profile or CV (if applicable), mask PII such as user emails, phone numbers, or API tokens that were accidentally committed in the repo.
 
-## 4. Pelaporan Objektif
-- Rekomendasi proyek portofolio di akhir proses HARUS bersifat spesifik dan menyasar langsung gap yang ditemukan.
-- *Contoh Buruk*: "Buatlah proyek menggunakan Python."
-- *Contoh Baik*: "Berdasarkan gap yang kami temukan (kurangnya pengalaman API Design), buatlah proyek RESTful API sederhana menggunakan FastAPI (Python) yang melakukan operasi CRUD ke database SQLite."
+## 4. Objective Reporting
+- Portfolio project recommendations at the end of the process MUST be specific and directly target the identified gaps.
+- *Bad Example*: "Build a project using Python."
+- *Good Example*: "Based on the gap we found (lack of API Design experience), build a simple RESTful API project using FastAPI (Python) that performs CRUD operations on a SQLite database."

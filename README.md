@@ -53,16 +53,25 @@ Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harn
 ```text
 ├── app.py                      # Streamlit UI & Orchestration controller
 ├── agents.py                   # Master multi-agent pipeline orchestrator
-├── github_api.py               # GitHub REST & Tree API concurrent wrapper
+├── github_api.py               # GitHub REST & Tree API concurrent wrapper (with rate-limit handling)
+├── mcp_server.py               # FastMCP server exposing GitHub + Adzuna tools
 ├── security_middleware.py      # PII masking & sanitization utility
+├── requirements.txt            # Python dependencies
+├── .env.example                # Environment variable template
+├── AGENTS.md                   # Project DNA — core constraints for all agents
+├── writeup.md                  # Submission writeup / project overview
 ├── specs/
-│   └── skill_taxonomy.yaml     # Spec-driven taxonomy mapping (Anti-Hallucination)
+│   ├── skill_taxonomy.yaml     # Spec-driven taxonomy mapping (Anti-Hallucination)
 │   └── indonesia_tech_jobs.json# Fallback curated Indonesian tech jobs dataset
-└── skills/
-    ├── market_researcher.py    # Google Search Grounded Agent
-    ├── job_parser.py           # Taxonomy-driven JD parsing agent
-    ├── github_auditor.py       # Git Tree structural auditing agent
-    └── gap_analyzer.py         # Objective match & portfolio recommender agent
+├── skills/
+│   ├── __init__.py             # Python package marker
+│   ├── market_researcher.py    # Google Search Grounded Agent (with fallback)
+│   ├── job_parser.py           # Taxonomy-driven JD parsing agent
+│   ├── github_auditor.py       # Git Tree structural auditing agent
+│   └── gap_analyzer.py         # Objective match & portfolio recommender agent
+└── evaluation/
+    ├── llm_judge.py            # LLM-as-a-Judge trajectory evaluator
+    └── golden_dataset.json     # 5 test cases for regression testing
 ```
 
 ---

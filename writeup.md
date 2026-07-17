@@ -13,7 +13,7 @@ We utilized the following tools covered in the course:
 1. **Multi-Agent System (ADK)**: Built with `google-genai`, splitting logic into `job_parser`, `github_auditor`, and `gap_analyzer` skills to prevent context rot.
 2. **MCP Server**: A custom `FastMCP` server acts as the secure interface to GitHub API, reading repositories and READMEs.
 3. **Security Features**: Implemented a `security_middleware.py` that strips PII (Emails, Phone numbers) before passing data to the LLM (Context Hygiene).
-4. **Deployability & UI**: An interactive Streamlit frontend with Plotly radar charts, easily deployable to any cloud host.
+4. **Deployability & UI**: An interactive Streamlit frontend with Plotly bar charts, easily deployable to any cloud host.
 5. **LLM Evaluation**: Maintained a Golden Dataset to automatically grade the agent's performance.
 
 ## Future Work
