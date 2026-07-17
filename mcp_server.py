@@ -2,7 +2,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from mcp.server.fastmcp import FastMCP
-from github_api import get_user_repos_raw, get_headers
+from github_api import get_user_repos_raw, get_repo_readme_raw, get_headers
 
 load_dotenv()
 ADZUNA_APP_ID = os.getenv("ADZUNA_APP_ID")
@@ -19,23 +19,7 @@ def get_user_repos(username: str, limit: int = 5) -> str:
 @mcp.tool()
 def get_repo_readme(username: str, repo_name: str) -> str:
     """Fetch the contents of the README.md file for a specific repository."""
-    url = f"https://api.github.com/repos/{username}/{repo_name}/readme"
-    headers = get_headers()
-    
-    response = requests.get(url, headers=headers)
-    if response.status_code != 200:
-        return f"Error fetching README for {username}/{repo_name} (Might not exist or is empty)."
-    
-    import base64
-    content_b64 = response.json().get("content", "")
-    try:
-        content = base64.b64decode(content_b64).decode('utf-8')
-        # Simple truncation if README is extremely long
-        if len(content) > 5000:
-            content = content[:5000] + "\n...[TRUNCATED]"
-        return content
-    except Exception as e:
-        return f"Error decoding README: {e}"
+    return get_repo_readme_raw(username, repo_name)
 
 @mcp.tool()
 def search_jobs_adzuna(job_title: str, location: str = "us", limit: int = 3) -> str:
