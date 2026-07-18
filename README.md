@@ -16,8 +16,8 @@ Where the **Model** acts as the reasoning engine (Gemini), and the **Harness** r
 Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harness framework:
 
 ### 1. Spec-Driven Development (SDD) & BDD
-* **Spec Gating**: Built with a strict taxonomy file ([specs/skill_taxonomy.yaml](file:///c:/kaggle-vibecoding-aiagents-2026/specs/skill_taxonomy.yaml)) to prevent model hallucination. The parser maps unstructured job descriptions only to predefined, validated tech categories.
-* **Project DNA**: Controlled by global and workspace project rules (`AGENTS.md`) ensuring that the agent remains strict, objective, and evidence-based.
+* **Spec Gating**: Built with a strict taxonomy file ([specs/skill_taxonomy.yaml](specs/skill_taxonomy.yaml)) to prevent model hallucination. The parser maps unstructured job descriptions only to predefined, validated tech categories.
+* **Project DNA**: Controlled by the project rules file ([AGENTS.md](AGENTS.md)) ensuring that every agent remains strict, objective, and evidence-based.
 
 ### 2. Procedural Memory via Agent Skills
 * Instead of stuffing all logic into a single context-rot prompt, the system's memory is divided into modular, decoupled **Agent Skills** under the `skills/` directory:
@@ -30,10 +30,10 @@ Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harn
 * The Harness integrates tools using the **Model Context Protocol (MCP)**, connecting the reasoning model securely to the GitHub REST API and Google Search Grounding services.
 
 ### 4. Zero-Trust Security & Policy Gating
-* **Context Hygiene**: Employs a security middleware ([security_middleware.py](file:///c:/kaggle-vibecoding-aiagents-2026/security_middleware.py)) that acts as a structural policy gate. It filters and masks PII (Personally Identifiable Information) and sensitive API keys *before* the context is passed to the LLM.
+* **Context Hygiene**: Employs a security middleware ([security_middleware.py](security_middleware.py)) that acts as a structural policy gate. It filters and masks PII (Personally Identifiable Information) and sensitive API keys *before* the context is passed to the LLM.
 
 ### 5. Evaluation-Driven Development (EDD)
-* Utilizes LLM-as-a-judge trajectory testing (`evaluation/`) to trace and measure the agent's reasoning path, self-repair behavior, and output consistency against test cases.
+* Utilizes LLM-as-a-judge trajectory testing ([evaluation/](evaluation/)) to trace and measure the agent's reasoning path, self-repair behavior, and output consistency against test cases.
 
 ---
 
@@ -47,6 +47,27 @@ Here is how TechGap AI maps directly to the 5-step production-grade Agentic Harn
 * **Real-time & Reliable**: Bypasses the delayed GitHub Code Search indexing by reading repository file structures directly using the Git Tree API.
 * **Concurrency (Multithreading)**: Uses `ThreadPoolExecutor` to scan the file trees of up to 100+ repositories concurrently in seconds.
 * **Verifiable Evidence**: Demands hard code proof (e.g., finding `.sql` files for SQL, `terraform-gcp` directories for GCP) to prevent bio-based or README-based skill hallucinations.
+
+---
+
+## 🖥️ User Experience
+
+The frontend is built with **Streamlit** and **Plotly**, providing:
+- A dual-tab input interface: "Live Indonesian Tech Market" (search-grounded) or "Manual JD Paste"
+- Auto-saving of pasted job descriptions to a local cache file
+- An interactive bar chart with color-coded skill status (Green = Acquired, Red = Gap, Grey = Nice-to-have)
+- Expandable sections for viewing raw market data and full GitHub audit evidence
+- A final detailed report with personalized portfolio project recommendations
+
+---
+
+## 🔮 Future Work
+
+1. **Expanded Regional Coverage**: Extend the search-grounded agent to support additional country-specific prompts (e.g., Singapore, Malaysia, Australia) for professionals seeking regional opportunities. Explore partnerships with job platforms that offer official public APIs.
+2. **Chrome Extension**: A browser extension that auto-detects job descriptions while users browse job boards and feeds them into the TechGap pipeline, eliminating manual copy-paste.
+3. **CV Upload & Cross-Reference**: Support for PDF CV parsing to cross-reference self-reported skills against GitHub-verified evidence, flagging discrepancies.
+4. **Skill Trend Dashboard**: Historical analysis showing how demand for specific skills evolves over time, helping users plan long-term career pivots.
+5. **LinkedIn Integration**: Extend auditing to LinkedIn profiles for soft skill and certification verification.
 
 ---
 
