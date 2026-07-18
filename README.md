@@ -2,6 +2,8 @@
 
 TechGap AI is a production-grade, multi-agent AI system designed to help tech professionals identify and close their precise skill gaps. By analyzing live market demands in Indonesia and cross-referencing them against actual, verifiable code structures on GitHub, TechGap AI provides objective, data-driven career development roadmaps and tailored project recommendations.
 
+**Live Demo:** [techgap.streamlit.app](https://techgap.streamlit.app/)
+
 ---
 
 ## 🔬 Framework & Theoretical Foundation: `Agent = Model + Harness`
